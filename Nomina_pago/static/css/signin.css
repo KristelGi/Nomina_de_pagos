@@ -1,0 +1,144 @@
+/* Estilos unificados para formularios de autenticación (signin y signup) */
+
+
+/* Navbar - aseguramos que el navbar tenga su propio espaciado */
+.navbar {
+  margin-bottom: 10px;  /* Espaciado inferior para que no se solape con el formulario */
+}
+
+/* Estilos para la tarjeta de formulario */
+.card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: none;
+  border-top: 4px solid var(--secondary-color);
+  margin-top: 20px;  /* Aseguramos que haya suficiente espacio desde la parte superior */
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Títulos del formulario */
+form h1 {
+  font-weight: 700;
+  font-size: 2.2rem;
+  margin-bottom: 30px;
+  color: var(--primary-color);
+  text-align: center;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+form h1:after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 3px;
+  background-color: var(--secondary-color);
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+
+/* Grupos de campos */
+.mb-3 {
+  margin-bottom: 22px;
+  position: relative;
+}
+
+/* Estilo de los campos */
+form input[type="text"],
+form input[type="password"],
+form input[type="email"],
+.form-control {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+}
+
+/* Botones */
+button,
+.btn,
+.btn-primary {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  padding: 10px 25px;
+  border-radius: 50px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: white;
+  width: 100%;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  margin-top: 15px;
+  text-align: center;
+  display: block;
+}
+
+button:hover,
+.btn:hover,
+.btn-primary:hover {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+button:active,
+.btn:active,
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Enlaces dentro del formulario */
+form a {
+  color: var(--secondary-color);
+  transition: all 0.3s ease;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+form a:hover {
+  color: var(--accent-color);
+  transform: translateX(3px);
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 991.98px) {
+  .container {
+    padding-top: 40px;  /* Reducimos el padding en pantallas medianas */
+    padding-bottom: 60px;
+  }
+
+  form h1 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .container {
+    padding-top: 20px; /* Menos espacio en pantallas pequeñas */
+    padding-bottom: 40px;
+  }
+
+  .card {
+    padding: 25px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+ 
+  form h1 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+}

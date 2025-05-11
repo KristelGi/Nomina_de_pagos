@@ -1,82 +1,252 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
+{% extends "home.html" %}
+{% block extra_css %}
+<style>
+  /* Estilos adicionales específicos para esta página */
+  table.table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .table thead th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    border-color: var(--primary-color);
+  }
+  
+  .btn-sm {
+    border-radius: 20px;
+    padding: 0.25rem 0.7rem;
+  }
+  
+  .btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+  }
+  
+  .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .card {
+    border-radius: 10px;
+    border: none;
+    margin-bottom: 25px;
+    overflow: hidden;
+  }
+  
+  .form-control, .form-select {
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: 1px solid #ced4da;
+    font-size: 0.9rem;
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(44, 165, 141, 0.25);
+  }
+  
+  .form-label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+  }
 
-<h2>{{ title }}</h2>
+  /* Estilos para la paginación */
+  .pagination {
+    gap: 5px;
+  }
+  
+  .page-link {
+    border-radius: 6px;
+    color: var(--primary-color);
+    border-color: #dee2e6;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .page-item.active .page-link {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+  }
+  
+  .page-link:hover {
+    background-color: #e9ecef;
+    color: var(--secondary-color);
+  }
+  
+  .page-item.disabled .page-link {
+    color: #6c757d;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-lg-12">
+        <h2 class="text-center mb-4">{{ title }}</h2>
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+              <div class="col-md-3">
+                <label for="searchQuery" class="form-label">Buscar</label>
+                <input type="text" class="form-control" id="searchQuery" name="q" placeholder="Buscar por nombre" value="{{ q }}">
+              </div>
+              <div class="col-md-2">
+                <label for="departamentoSelect" class="form-label">Departamento</label>
+                <select class="form-select" id="departamentoSelect" name="departamento">
+                  <option value="">Todos los departamentos</option>
+                  {% for d in departamentos %}
+                    <option value="{{ d.id }}" {% if d.id|stringformat:"s" == departamento_seleccionado %}selected{% endif %}>
+                      {{ d.descripcion }}
+                    </option>
+                  {% endfor %}
+                </select>
+                </div>
+                
 
-<form method="get">
-    <input type="text" name="q" placeholder="Buscar por nombre" value="{{ q }}">
+              <div class="col-md-2">
+                <label for="cargoSelect" class="form-label">Cargo</label>
+                <select class="form-select" id="cargoSelect" name="cargo">
+                  <option value="">Todos los cargos</option>
+                  {% for c in cargos %}
+                    <option value="{{ c.id }}" {% if c.id|stringformat:"s" == cargo_seleccionado %}selected{% endif %}>
+                      {{ c.descripcion }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="contratoSelect" class="form-label">Contrato</label>
+                <select class="form-select" id="contratoSelect" name="contrato">
+                  <option value="">Todos los contratos</option>
+                  {% for tc in tipos_contrato %}
+                    <option value="{{ tc.id }}" {% if tc.id|stringformat:"s" == contrato_seleccionado %}selected{% endif %}>
+                      {{ tc.descripcion }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-3">
+                <div class="d-flex gap-2">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-filter me-1"></i> Filtrar
+                  </button>
+                  <a href="{% url 'Nomina:listar_empleados' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-redo me-1"></i> Limpiar
+                  </a>
+                </div>
+              </div>
+              
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+<div class="row mb-4">
+      <div class="col-lg-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>{{ title }}</h2>
+          <a href="{% url 'Nomina:crear_empleado' %}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Nuevo empleado
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        {% if empleados %}
+        <div class="table-responsive">
+          <table class="table table-hover table-striped">
+            <thead class="table-light">
+              <tr>
+                <th>Nombre</th>
+                <th>Cédula</th>
+                <th>Departamento</th>
+                <th>Cargo</th>
+                <th>Tipo de Contrato</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for e in empleados %}
+              <tr>
+                <td>{{ e.nombre }}</td>
+                <td>{{ e.cedula }}</td>
+                <td>{{ e.departamento.descripcion }}</td>
+                <td>{{ e.cargo.descripcion }}</td>
+                <td>{{ e.tipo_contrato.descripcion }}</td>
+                <td class="text-center">
+                  <a href="{% url 'Nomina:actualizar_empleado' e.id %}" class="btn btn-sm btn-outline-primary me-1">
+                    <i class="fas fa-edit"></i> Editar
+                  </a>
+                  <a href="{% url 'Nomina:eliminar_empleado' e.id %}" class="btn btn-sm btn-outline-danger">
+                    <i class="fas fa-trash"></i> Eliminar
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center">
+          <i class="fas fa-info-circle me-2"></i> No se encontraron empleados
+        </div>
+        {% endif %}
+      </div>
+    </div>
+<!-- Paginación -->
+        {% if empleados.has_other_pages %}
+        <nav aria-label="Page navigation" class="mt-4">
+          <ul class="pagination justify-content-center">
+            {% if empleados.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ empleados.previous_page_number }}">
+                <i class="fas fa-chevron-left me-1"></i>Anterior
+              </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                <i class="fas fa-chevron-left me-1"></i>Anterior
+              </a>
+            </li>
+            {% endif %}
 
-    <select name="departamento">
-        <option value="">Todos los departamentos</option>
-        {% for d in departamentos %}
-            <option value="{{ d.id }}" {% if d.id|stringformat:"s" == departamento_seleccionado %}selected{% endif %}>
-                {{ d.descripcion }}
-            </option>
-        {% endfor %}
-    </select>
+            {% for i in empleados.paginator.page_range %}
+              {% if empleados.number == i %}
+              <li class="page-item active">
+                <a class="page-link" href="#">{{ i }}</a>
+              </li>
+              {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+              </li>
+              {% endif %}
+            {% endfor %}
+              
+            {% if empleados.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ empleados.next_page_number }}">
+                Siguiente<i class="fas fa-chevron-right ms-1"></i>
+              </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                Siguiente<i class="fas fa-chevron-right ms-1"></i>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+  </div>
+</section>
 
-    <select name="cargo">
-        <option value="">Todos los cargos</option>
-        {% for c in cargos %}
-            <option value="{{ c.id }}" {% if c.id|stringformat:"s" == cargo_seleccionado %}selected{% endif %}>
-                {{ c.descripcion }}
-            </option>
-        {% endfor %}
-    </select>
 
-    <select name="contrato">
-        <option value="">Todos los contratos</option>
-        {% for tc in tipos_contrato %}
-            <option value="{{ tc.id }}" {% if tc.id|stringformat:"s" == contrato_seleccionado %}selected{% endif %}>
-                {{ tc.descripcion }}
-            </option>
-        {% endfor %}
-    </select>
-
-    
-
-    <button type="submit"> Filtrar </button>
-    <a href="{% url 'Nomina:listar_empleados' %}">Limpiar</a>
-</form>
-
-<hr>
-
-{% if empleados %}
-<table border="1" cellpadding="5" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Cédula</th>
-            <th>Departamento</th>
-            <th>Cargo</th>
-            <th>Tipo de Contrato</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for e in empleados %}
-        <tr>
-            <td>{{ e.nombre }}</td>
-            <td>{{ e.cedula }}</td>
-            <td>{{ e.departamento.descripcion }}</td>
-            <td>{{ e.cargo.descripcion }}</td>
-            <td>{{ e.tipo_contrato.descripcion }}</td>
-            <td>
-                <a href="{% url 'Nomina:actualizar_empleado' e.id %}">Editar</a> |
-                <a href="{% url 'Nomina:eliminar_empleado' e.id %}">Eliminar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>No se encontraron empleados</p>
-{% endif %}
-
-</body>
-</html>
+{% endblock %}

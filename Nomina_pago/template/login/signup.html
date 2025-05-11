@@ -1,0 +1,47 @@
+{% extends "home.html" %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/signin.css' %}">
+<main class="container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <form action="/signup/" method="POST" class="card card-body">
+                <h1>Crear Cuenta</h1>
+               
+                {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+               
+                {% csrf_token %}
+               
+                <div class="mb-3">
+                    <label for="username">Nombre de usuario</label>
+                    <input type="text" id="username" name="username" class="form-control"
+                           placeholder="Ingresa tu usuario" required>
+                    <small class="form-text text-muted">Requerido. 150 caracteres o menos.</small>
+                </div>
+               
+                <div class="mb-3">
+                    <label for="password1">Contraseña</label>
+                    <input type="password" id="password1" name="password1" class="form-control"
+                           placeholder="Ingresa tu contraseña" required>
+                </div>
+               
+                <div class="mb-3">
+                    <label for="password2">Confirma tu contraseña</label>
+                    <input type="password" id="password2" name="password2" class="form-control"
+                           placeholder="Confirma tu contraseña" required>
+                </div>
+               
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-user-plus me-2"></i> Crear Cuenta
+                </button>
+               
+                <div class="form-text mt-3">
+                    ¿Ya tienes una cuenta? <a href="/signin/">Inicia sesión aquí</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,21 +1,172 @@
-<h2>{{ title }}</h2>
+{% extends "home.html" %}
+{% block extra_css %}
+<style>
+  /* Estilos adicionales específicos para esta página */
+  table.table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+ 
+  .table thead th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    border-color: var(--primary-color);
+  }
+ 
+  .btn-sm {
+    border-radius: 20px;
+    padding: 0.25rem 0.7rem;
+  }
+ 
+  .btn-outline-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+  }
+ 
+  .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+  }
+ 
+  .card {
+    border-radius: 10px;
+    border: none;
+    margin-bottom: 25px;
+    overflow: hidden;
+  }
 
-<a href="{% url 'Nomina:crear_cargo' %}">Nuevo Cargo</a>
+    /* Estilos para la paginación */
+  .pagination {
+    gap: 5px;
+  }
+  
+  .page-link {
+    border-radius: 6px;
+    color: var(--primary-color);
+    border-color: #dee2e6;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .page-item.active .page-link {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+  }
+  
+  .page-link:hover {
+    background-color: #e9ecef;
+    color: var(--secondary-color);
+  }
+  
+  .page-item.disabled .page-link {
+    color: #6c757d;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<section class="py-5">
+  <div class="container">
+    <div class="row mb-4">
+      <div class="col-lg-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2>{{ title }}</h2>
+          <a href="{% url 'Nomina:crear_cargo' %}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Nuevo Cargo
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover table-striped">
+                <thead class="table-light">
+                  <tr>
+                    <th>ID</th>
+                    <th>Descripción</th>
+                    <th class="text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for c in cargos %}
+                  <tr>
+                    <td>{{ c.id }}</td>
+                    <td>{{ c.descripcion }}</td>
+                    <td class="text-center">
+                      <a href="{% url 'Nomina:actualizar_cargo' c.id %}" class="btn btn-sm btn-outline-primary me-2">
+                        <i class="fas fa-edit"></i> Editar
+                      </a>
+                      <a href="{% url 'Nomina:eliminar_cargo' c.id %}" class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-trash"></i> Eliminar
+                      </a>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="3">
+                      <div class="alert alert-info text-center mb-0">
+                        <i class="fas fa-info-circle me-2"></i> No hay cargos registrados
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            </div>
+        </div>
+             <!-- Paginación -->
+        {% if cargos.has_other_pages %}
+        <nav aria-label="Page navigation" class="mt-4">
+          <ul class="pagination justify-content-center">
+            {% if cargos.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ cargos.previous_page_number }}">
+                <i class="fas fa-chevron-left me-1"></i>Anterior
+              </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                <i class="fas fa-chevron-left me-1"></i>Anterior
+              </a>
+            </li>
+            {% endif %}
 
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Descripción</th>
-        <th>Acciones</th>
-    </tr>
-    {% for c in cargos %}
-    <tr>
-        <td>{{ c.id }}</td>
-        <td>{{ c.descripcion }}</td>
-        <td>
-            <a href="{% url 'Nomina:actualizar_cargo' c.id %}">Editar</a> |
-            <a href="{% url 'Nomina:eliminar_cargo' c.id %}">Eliminar</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+            {% for i in cargos.paginator.page_range %}
+              {% if cargos.number == i %}
+              <li class="page-item active">
+                <a class="page-link" href="#">{{ i }}</a>
+              </li>
+              {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+              </li>
+              {% endif %}
+            {% endfor %}
+              
+            {% if cargos.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ cargos.next_page_number }}">
+                Siguiente<i class="fas fa-chevron-right ms-1"></i>
+              </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                Siguiente<i class="fas fa-chevron-right ms-1"></i>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+          
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

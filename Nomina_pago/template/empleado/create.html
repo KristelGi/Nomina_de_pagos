@@ -1,6 +1,569 @@
-<h2>{{ title }}</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar</button>
-</form>
+{% extends 'home.html' %}
+
+{% block extra_css %}
+<style>
+/* Estilos personalizados para formularios de nómina */
+/* Manteniendo las variables de color del sitio principal para coherencia */
+:root {
+  --primary-color: #0A2342;     /* Color principal - azul oscuro */
+  --primary-hover: #081d38;     /* Variación más oscura para hover */
+  --secondary-color: #2CA58D;   /* Color secundario - verde agua */
+  --secondary-hover: #249880;   /* Variación más oscura para hover */
+  --accent-color: #84BC9C;      /* Color acento - verde claro */
+  --light-color: #f8f9fa;       /* Color claro para fondos */
+  --medium-light: #e9ecef;      /* Tono medio para bordes y divisores */
+  --text-color: #333;           /* Color de texto principal */
+  --text-muted: #6c757d;        /* Color para texto secundario */
+  --text-light: #ffffff;        /* Color de texto claro */
+  --error-color: #dc3545;       /* Rojo para errores */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --border-radius: 10px;        /* Radio de borde consistente con el home */
+  --transition: all 0.3s ease;  /* Transición estándar del sitio */
+}
+
+/* Mejoras generales y reset */
+body {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-color);
+  line-height: 1.6;
+  background-color: var(--light-color);
+}
+
+/* Encabezado de página con efecto de profundidad */
+.page-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid rgba(10, 35, 66, 0.1);
+  position: relative;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.page-header:after {
+  content: '';
+  position: absolute;
+  width: 80px;
+  height: 3px;
+  background-color: var(--secondary-color);
+  bottom: -2px;
+  left: 0;
+}
+
+.page-header h1 {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+}
+
+.page-header .lead {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+/* Mejora en estilos de tarjeta */
+.card {
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+  transition: var(--transition);
+  background-color: white;
+}
+
+.card:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  transform: translateY(-10px);
+}
+
+.card-header {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  padding: 1.25rem 1.5rem;
+  font-weight: 600;
+  border-bottom: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  top: 0;
+  left: -50%;
+  transform: skewX(-20deg);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) skewX(-20deg); }
+  100% { transform: translateX(100%) skewX(-20deg); }
+}
+
+.card-header h5 {
+  margin-bottom: 0;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+}
+
+.card-header i {
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+/* Estilos de formulario mejorados */
+.form-label {
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.form-label i {
+  color: var(--secondary-color);
+  margin-right: 0.5rem;
+  width: 18px;
+  text-align: center;
+}
+
+.form-control,
+.form-select {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--medium-light);
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+  width: 100%;
+  font-size: 1rem;
+  color: var(--text-color);
+  background-color: #fff;
+}
+
+.form-control:hover,
+.form-select:hover {
+  border-color: var(--accent-color);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(36, 160, 136, 0.2);
+  outline: none;
+}
+
+.form-text {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Mensajes de error mejorados */
+.text-danger {
+  color: var(--error-color) !important;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+  display: flex;
+  align-items: flex-start;
+}
+
+.text-danger::before {
+  content: "⚠️";
+  margin-right: 0.35rem;
+  font-size: 0.9rem;
+}
+
+/* Botones con efectos de hover mejorados */
+.btn {
+  padding: 0.75rem 1.75rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.3px;
+  border: none;
+}
+
+.btn i {
+  margin-right: 0.5rem;
+  font-size: 0.9em;
+}
+
+.btn-primary {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  color: white;
+  box-shadow: 0 2px 5px rgba(44, 165, 141, 0.3);
+}
+
+.btn-primary:hover, 
+.btn-primary:focus {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  color: var(--primary-color);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(44, 165, 141, 0.4);
+}
+
+.btn-outline-secondary {
+  border: 2px solid var(--medium-light);
+  color: var(--text-muted);
+  background-color: transparent;
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus {
+  background-color: var(--light-color);
+  border-color: var(--text-muted);
+  color: var(--text-color);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Secciones del formulario mejoradas */
+.form-section {
+  margin-bottom: 2.5rem;
+}
+
+/* Títulos de sección mejorados */
+h5.border-bottom {
+  font-size: 1.1rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.75rem;
+  border-bottom: 1px solid rgba(10, 35, 66, 0.15);
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 10px;
+}
+
+h5.border-bottom::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: var(--secondary-color);
+  border-radius: 10px;
+}
+
+h5.border-bottom i {
+  color: var(--secondary-color);
+  margin-right: 0.5rem;
+}
+
+/* Iconos con colores consistentes */
+.text-primary {
+  color: var(--secondary-color) !important;
+}
+
+.form-label i {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Mejoras para campos específicos */
+input[type="number"] {
+  text-align: right;
+  padding-right: 0.75rem;
+}
+
+/* Espaciado entre elementos del formulario */
+.mb-4 {
+  margin-bottom: 1.75rem;
+}
+
+/* Área de botones de acción */
+.d-flex.justify-content-end {
+  gap: 1rem;
+}
+
+/* Contenedor principal */
+.container.py-4 {
+  padding-top: 2.5rem !important;
+  padding-bottom: 3rem !important;  
+}
+
+/* Diseño responsivo mejorado */
+@media (max-width: 991.98px) {
+  .col-lg-10.mx-auto {
+    padding: 0 0.5rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .btn {
+    padding: 0.7rem 1.5rem;
+  }
+  
+  .row {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+  
+  .col-md-6, .col-md-4 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .card-body {
+    padding: 1.25rem;
+  }
+  
+  .d-flex.justify-content-end {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .d-flex.justify-content-end .btn {
+    margin-bottom: 0.75rem;
+    width: 100%;
+  }
+  
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .page-header .lead {
+    font-size: 1rem;
+  }
+  
+  h5.border-bottom {
+    font-size: 1rem;
+  }
+}
+
+/* Efectos de animación para mejorar la experiencia del usuario */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.form-section {
+  animation: fadeIn 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+.form-section:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.form-section:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Estados de campo inválido */
+.form-control:invalid:focus, 
+.form-select:invalid:focus {
+  border-color: var(--error-color);
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.2);
+}
+
+/* Mejoras para accesibilidad - enfoque visible */
+*:focus-visible {
+  outline: 2px solid var(--secondary-color);
+  outline-offset: 2px;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <header class="page-header mb-4">
+        <h1 class="display-5 fw-bold text-primary">
+            <i class="fas fa-user-tie me-2"></i>{{ title }}
+        </h1>
+        <p class="lead text-muted">Registrar nuevo empleado en el sistema</p>
+    </header>
+    
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0"><i class="fas fa-id-card me-2"></i>Información del Empleado</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <!-- Datos personales -->
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="{{ form.nombre.id_for_label }}" class="form-label">
+                                        <i class="fas fa-user text-primary me-2"></i>{{ form.nombre.label|default:"Nombre completo" }}
+                                    </label>
+                                    {{ form.nombre }}
+                                    {% if form.nombre.errors %}
+                                        <div class="text-danger mt-1">
+                                            {{ form.nombre.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="{{ form.cedula.id_for_label }}" class="form-label">
+                                        <i class="fas fa-id-card text-primary me-2"></i>{{ form.cedula.label|default:"Cédula de identidad" }}
+                                    </label>
+                                    {{ form.cedula }}
+                                    <div class="form-text text-muted">
+                                        Documento de identidad único del empleado
+                                    </div>
+                                    {% if form.cedula.errors %}
+                                        <div class="text-danger mt-1">
+                                            {{ form.cedula.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="{{ form.sexo.id_for_label }}" class="form-label">
+                                        <i class="fas fa-venus-mars text-primary me-2"></i>{{ form.sexo.label|default:"Sexo" }}
+                                    </label>
+                                    {{ form.sexo }}
+                                    {% if form.sexo.errors %}
+                                        <div class="text-danger mt-1">
+                                            {{ form.sexo.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Dirección y datos laborales -->
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label for="{{ form.direccion.id_for_label }}" class="form-label">
+                                        <i class="fas fa-map-marker-alt text-primary me-2"></i>{{ form.direccion.label|default:"Dirección" }}
+                                    </label>
+                                    {{ form.direccion }}
+                                    {% if form.direccion.errors %}
+                                        <div class="text-danger mt-1">
+                                            {{ form.direccion.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="{{ form.sueldo.id_for_label }}" class="form-label">
+                                        <i class="fas fa-dollar-sign text-primary me-2"></i>{{ form.sueldo.label|default:"Sueldo" }}
+                                    </label>
+                                    {{ form.sueldo }}
+                                    {% if form.sueldo.errors %}
+                                        <div class="text-danger mt-1">
+                                            {{ form.sueldo.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Información laboral -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <h5 class="border-bottom pb-2 mb-3 text-secondary">
+                                    <i class="fas fa-briefcase me-2"></i>Información laboral
+                                </h5>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="mb-4">
+                                    <label for="{{ form.cargo.id_for_label }}" class="form-label">
+                                        <i class="fas fa-user-tag text-primary me-2"></i>{{ form.cargo.label|default:"Cargo" }}
+                                    </label>
+                                    {{ form.cargo }}
+                                    {% if form.cargo.errors %}
+                                        <div class="text-danger mt-1">
+                                            {{ form.cargo.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="mb-4">
+                                    <label for="{{ form.departamento.id_for_label }}" class="form-label">
+                                        <i class="fas fa-building text-primary me-2"></i>{{ form.departamento.label|default:"Departamento" }}
+                                    </label>
+                                    {{ form.departamento }}
+                                    {% if form.departamento.errors %}
+                                        <div class="text-danger mt-1">
+                                            {{ form.departamento.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="mb-4">
+                                    <label for="{{ form.tipo_contrato.id_for_label }}" class="form-label">
+                                        <i class="fas fa-file-signature text-primary me-2"></i>{{ form.tipo_contrato.label|default:"Tipo de Contrato" }}
+                                    </label>
+                                    {{ form.tipo_contrato }}
+                                    {% if form.tipo_contrato.errors %}
+                                        <div class="text-danger mt-1">
+                                            {{ form.tipo_contrato.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Botones de acción -->
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="{% url 'Nomina:listar_empleados' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i>Guardar Empleado
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
