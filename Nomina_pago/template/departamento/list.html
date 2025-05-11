@@ -1,0 +1,21 @@
+<h2>{{ title }}</h2>
+
+<a href="{% url 'Nomina:crear_departamento' %}">Nuevo Departamento</a>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+    </tr>
+    {% for d in departamentos %}
+    <tr>
+        <td>{{ d.id }}</td>
+        <td>{{ d.descripcion }}</td>
+        <td>
+            <a href="{% url 'Nomina:actualizar_departamento' d.id %}">Editar</a> |
+            <a href="{% url 'Nomina:eliminar_departamento' d.id %}">Eliminar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

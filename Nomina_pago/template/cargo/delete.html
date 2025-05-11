@@ -1,0 +1,7 @@
+<h2>{{ title }}</h2>
+<p>¿Seguro que deseas eliminar el cargo <strong>{{ cargo.descripcion }}</strong>?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sí, eliminar</button>
+    <a href="{% url 'Nomina:listar_cargos' %}">Cancelar</a>
+</form>

@@ -1,0 +1,9 @@
+<h2>{{ title }}</h2>
+
+<p>¿Estás seguro que deseas eliminar el rol de <strong>{{ rol.empleado.nombre }}</strong> para el mes {{ rol.aniomes }}?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sí, eliminar</button>
+    <a href="{% url 'Nomina:listar_roles' %}">Cancelar</a>
+</form>

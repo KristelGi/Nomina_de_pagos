@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+
+<h2>{{ title }}</h2>
+
+<form method="get">
+    <input type="text" name="q" placeholder="Buscar por nombre" value="{{ q }}">
+
+    <select name="departamento">
+        <option value="">Todos los departamentos</option>
+        {% for d in departamentos %}
+            <option value="{{ d.id }}" {% if d.id|stringformat:"s" == departamento_seleccionado %}selected{% endif %}>
+                {{ d.descripcion }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select name="cargo">
+        <option value="">Todos los cargos</option>
+        {% for c in cargos %}
+            <option value="{{ c.id }}" {% if c.id|stringformat:"s" == cargo_seleccionado %}selected{% endif %}>
+                {{ c.descripcion }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select name="contrato">
+        <option value="">Todos los contratos</option>
+        {% for tc in tipos_contrato %}
+            <option value="{{ tc.id }}" {% if tc.id|stringformat:"s" == contrato_seleccionado %}selected{% endif %}>
+                {{ tc.descripcion }}
+            </option>
+        {% endfor %}
+    </select>
+
+    
+
+    <button type="submit"> Filtrar </button>
+    <a href="{% url 'Nomina:listar_empleados' %}">Limpiar</a>
+</form>
+
+<hr>
+
+{% if empleados %}
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Cédula</th>
+            <th>Departamento</th>
+            <th>Cargo</th>
+            <th>Tipo de Contrato</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for e in empleados %}
+        <tr>
+            <td>{{ e.nombre }}</td>
+            <td>{{ e.cedula }}</td>
+            <td>{{ e.departamento.descripcion }}</td>
+            <td>{{ e.cargo.descripcion }}</td>
+            <td>{{ e.tipo_contrato.descripcion }}</td>
+            <td>
+                <a href="{% url 'Nomina:actualizar_empleado' e.id %}">Editar</a> |
+                <a href="{% url 'Nomina:eliminar_empleado' e.id %}">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No se encontraron empleados</p>
+{% endif %}
+
+</body>
+</html>

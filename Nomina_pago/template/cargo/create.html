@@ -1,0 +1,7 @@
+<h2>{{ title }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar</button>
+    <a href="{% url 'Nomina:listar_cargos' %}">Cancelar</a>
+</form>

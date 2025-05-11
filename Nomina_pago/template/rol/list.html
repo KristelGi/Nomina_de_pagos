@@ -1,0 +1,49 @@
+<h2>{{ title }}</h2>
+<a href="{% url 'Nomina:crear_rol' %}">Nuevo Rol</a>
+
+<h2>{{ title }}</h2>
+
+<form method="get">
+    <input type="text" name="q" placeholder="Buscar por nombre" value="{{ q }}">
+    
+    <input type="number" name="mes" placeholder="Mes (1-12)" min="1" max="12" value="{{ mes }}">
+    
+    <input type="number" name="sueldo_min" placeholder="Sueldo mínimo" step="0.01" value="{{ sueldo_min }}">
+    
+    <button type="submit">Filtrar</button>
+    <a href="{% url 'Nomina:listar_roles' %}">Limpiar</a>
+</form>
+
+<hr>
+
+<table border="1">
+    <tr>
+        <th>Empleado</th>
+        <th>Mes</th>
+        <th>Sueldo</th>
+        <th>Horas Extra</th>
+        <th>Bono</th>
+        <th>Total Ingresos</th>
+        <th>IESS</th>
+        <th>Total Descuentos</th>
+        <th>Neto</th>
+        <th>Acciones</th>
+    </tr>
+    {% for r in roles %}
+    <tr>
+        <td>{{ r.empleado.nombre }}</td>
+        <td>{{ r.aniomes|date:"F Y" }}</td> 
+        <td>{{ r.sueldo }}</td>
+        <td>{{ r.horas_extra }}</td>
+        <td>{{ r.bono }}</td>
+        <td>{{ r.tot_ing }}</td>
+        <td>{{ r.iess }}</td>
+        <td>{{ r.tot_des }}</td>
+        <td>{{ r.neto }}</td>
+        <td>
+            <a href="{% url 'Nomina:actualizar_rol' r.id %}">Editar</a> |
+            <a href="{% url 'Nomina:eliminar_rol' r.id %}">Eliminar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

@@ -1,0 +1,14 @@
+
+<h2>{{ title }}</h2>
+
+<p>¿Seguro que deseas eliminar a <strong>{{ empleado.nombre }}</strong>?</p>
+
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Sí, eliminar</button>
+    <a href="{% url 'Nomina:listar_empleados' %}">Cancelar</a>
+</form>

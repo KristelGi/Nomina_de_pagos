@@ -1,0 +1,21 @@
+<h2>{{ title }}</h2>
+
+<a href="{% url 'Nomina:crear_tipo_contrato' %}">Nuevo Tipo de Contrato</a>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+    </tr>
+    {% for c in contratos %}
+    <tr>
+        <td>{{ c.id }}</td>
+        <td>{{ c.descripcion }}</td>
+        <td>
+            <a href="{% url 'Nomina:actualizar_tipo_contrato' c.id %}">Editar</a> |
+            <a href="{% url 'Nomina:eliminar_tipo_contrato' c.id %}">Eliminar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
