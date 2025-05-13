@@ -1,9 +1,11 @@
 {% load static %}
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   {% load static %}
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{title}}</title>
@@ -13,10 +15,10 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!--  FAVICO --->
-  <link rel="shortcut icon" type="image/png" href="{% static 'img/NominaPro.png' %}">
+ <!--  FAVICO --->
+ <link rel="shortcut icon" type="image/png" href="{% static 'img/NominaPro.png' %}">
   <style>
-    :root {
+      :root {
       --primary-color: #0A2342;     /* Color principal - azul oscuro */
       --secondary-color: #2CA58D;   /* Color secundario - verde agua */
       --accent-color: #84BC9C;      /* Color acento - verde claro */
@@ -312,48 +314,97 @@
         margin-bottom: 30px;
       }
     }
+    /* Estilos para los dropdown menus del navbar */
+.dropdown-menu {
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 10px 0;
+  margin-top: 10px;
+}
+
+.dropdown-item {
+  color: var(--text-color);
+  padding: 8px 20px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: rgba(44, 165, 141, 0.1);
+  color: var(--secondary-color);
+  transform: translateX(5px);
+}
+
+.dropdown-toggle::after {
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+
+.navbar .dropdown:hover .dropdown-menu {
+  display: block;
+}
+
   </style>
   {% block extra_css %}{% endblock %}
 </head>
 <body>
   <!-- Navbar -->
+  <!-- Barra de navegación principal -->
   <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
-      <a class="navbar-brand">Nómina<span>Pro</span></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="{% url 'home' %}">Sistema de <span>Nómina</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href={% url 'home'%}>Inicio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href={% url 'Nomina:listar_empleados'%}>Empleados</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href={% url 'Nomina:listar_cargos'%} >Cargos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href={% url 'Nomina:listar_departamentos'%}>Departamentos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href={% url 'Nomina:listar_tipos_contrato'%}>Tipos de Contrato</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href={% url 'Nomina:listar_roles'%}>Roles de Pago</a>
-          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'home' %}">Inicio</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="empleadosDropdown" role="button" data-bs-toggle="dropdown">
+                Empleados
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'Nomina:listar_empleados' %}">Listar Empleados</a></li>
+                <li><a class="dropdown-item" href="{% url 'Nomina:crear_empleado' %}">Nuevo Empleado</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="rolesDropdown" role="button" data-bs-toggle="dropdown">
+                Roles de Pago
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'Nomina:listar_roles' %}">Listar Roles</a></li>
+                <li><a class="dropdown-item" href="{% url 'Nomina:crear_rol' %}">Nuevo Rol</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="catalogosDropdown" role="button" data-bs-toggle="dropdown">
+                Catálogos
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'Nomina:listar_cargos' %}">Cargos</a></li>
+                <li><a class="dropdown-item" href="{% url 'Nomina:listar_departamentos' %}">Departamentos</a></li>
+                <li><a class="dropdown-item" href="{% url 'Nomina:listar_tipos_contrato' %}">Tipos de Contrato</a></li>
+              </ul>
+            </li>
+          {% endif %}
         </ul>
         <div class="d-flex">
-        {% if user.is_authenticated %}
-          <div class="me-3 d-flex align-items-center text-light">
-            <span>Hola, {{ user.username }}</span>
-          </div>
-          <a class="btn btn-outline-primary" href={% url 'Nomina:logout'%}>Cerrar Sesión</a>
-        {% else %}
-          <a class="btn btn-outline-primary me-2" href={% url 'Nomina:signin'%}>Iniciar Sesión</a>
-          <a class="btn btn-primary" href={% url 'Nomina:signup'%}>Registrarse</a>
-        {% endif %}
+          {% if user.is_authenticated %}
+            <div class="me-3 d-flex align-items-center text-light">
+              <span>Hola, {{ user.username }}</span>
+            </div>
+            <a class="btn btn-outline-primary" href="{% url 'Nomina:logout' %}">Cerrar Sesión</a>
+          {% else %}
+            <a class="btn btn-outline-primary me-2" href="{% url 'Nomina:signin' %}">Iniciar Sesión</a>
+            <a class="btn btn-primary" href="{% url 'Nomina:signup' %}">Registrarse</a>
+          {% endif %}
+        </div>
       </div>
     </div>
   </nav>
@@ -366,8 +417,8 @@
           <h1>Sistema de Nómina de Pagos</h1>
           <p class="text-muted">Gestiona eficientemente la información de empleados, cargos, departamentos y roles de pago con nuestra plataforma integral.</p>
           <div class="d-flex flex-wrap">
-            <a class="btn btn-primary me-3 mb-2">Gestionar Empleados</a>
-            <a class="btn btn-outline-primary mb-2">Ver Roles de Pago</a>
+            <a href="{% url 'Nomina:listar_empleados' %}" class="btn btn-primary me-3 mb-2">Gestionar Empleados</a>
+            <a href="{% url 'Nomina:listar_roles' %}" class="btn btn-outline-primary mb-2">Ver Roles de Pago</a>
           </div>
         </div>
         <div class="col-lg-6">
@@ -438,6 +489,7 @@
             </div>
             <h4 class="feature-title">Gestión de Empleados</h4>
             <p>Registro completo de datos personales, asignación de cargos, departamentos y tipos de contrato. Búsqueda avanzada por múltiples criterios.</p>
+            <a href="{% url 'Nomina:listar_empleados' %}" class="btn btn-sm btn-outline-primary mt-2">Ir a Empleados</a>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 mb-4">
@@ -447,6 +499,7 @@
             </div>
             <h4 class="feature-title">Configuración Organizacional</h4>
             <p>Administra cargos, departamentos y tipos de contrato para mantener actualizada la estructura de tu empresa.</p>
+            <a href="{% url 'Nomina:listar_departamentos' %}" class="btn btn-sm btn-outline-primary mt-2">Ver Departamentos</a>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 mb-4">
@@ -456,6 +509,7 @@
             </div>
             <h4 class="feature-title">Cálculo automático</h4>
             <p>Generación de roles de pago con cálculos automatizados de ingresos, descuentos y valores netos a recibir.</p>
+            <a href="{% url 'Nomina:listar_roles' %}" class="btn btn-sm btn-outline-primary mt-2">Ver Roles</a>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 mb-4">
@@ -465,6 +519,7 @@
             </div>
             <h4 class="feature-title">Búsquedas avanzadas</h4>
             <p>Filtros por múltiples campos que facilitan la consulta de información específica en todos los módulos del sistema.</p>
+            <a href="{% url 'Nomina:listar_empleados' %}" class="btn btn-sm btn-outline-primary mt-2">Buscar Empleados</a>
           </div>
         </div>
         <div class="col-lg-4 col-md-6 mb-4">
@@ -474,6 +529,11 @@
             </div>
             <h4 class="feature-title">Control de acceso</h4>
             <p>Sistema de autenticación y permisos de usuario que garantiza la seguridad y confidencialidad de la información.</p>
+            {% if user.is_authenticated %}
+              <a href="{% url 'Nomina:logout' %}" class="btn btn-sm btn-outline-primary mt-2">Cerrar Sesión</a>
+            {% else %}
+              <a href="{% url 'Nomina:signin' %}" class="btn btn-sm btn-outline-primary mt-2">Iniciar Sesión</a>
+            {% endif %}
           </div>
         </div>
         <div class="col-lg-4 col-md-6 mb-4">
@@ -483,6 +543,7 @@
             </div>
             <h4 class="feature-title">Reportes detallados</h4>
             <p>Generación de informes de nómina, históricos de pagos y estadísticas para la toma de decisiones.</p>
+            <a href="{% url 'Nomina:listar_roles' %}" class="btn btn-sm btn-outline-primary mt-2">Ver Reportes</a>
           </div>
         </div>
       </div>
@@ -531,12 +592,40 @@
     </div>
   </section>
 
+  
+  <!-- Sección CTA para el registro y login -->
+  <section class="py-4 bg-light">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-10">
+          <div class="card shadow border-0">
+            <div class="card-body p-4">
+              <div class="row align-items-center">
+                <div class="col-lg-8 mb-3 mb-lg-0">
+                  <h4 class="fw-bold mb-1">¿Aún no tienes una cuenta?</h4>
+                  <p class="text-muted mb-0">Regístrate para comenzar a gestionar tu nómina de forma eficiente.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                  {% if user.is_authenticated %}
+                    <a href="{% url 'Nomina:listar_empleados' %}" class="btn btn-primary">Gestionar sistema</a>
+                  {% else %}
+                    <a href="{% url 'Nomina:signup' %}" class="btn btn-primary me-2">Registrarse</a>
+                    <a href="{% url 'Nomina:signin' %}" class="btn btn-outline-primary">Iniciar sesión</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- Footer -->
   <footer>
     <div class="container">
       <div class="row">
         <div class="col-lg-4 mb-4 mb-lg-0">
-          <h5 class="footer-heading">Nómina<span class="text-secondary">Pro</span></h5>
+          <h5 class="footer-heading">Sistema de Nómina</h5>
           <p>Sistema integral para la gestión de nómina y recursos humanos desarrollado con Django.</p>
           <div class="mt-4">
             <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
@@ -551,21 +640,17 @@
           <a class="footer-link">Empleados</a>
           <a class="footer-link">Roles de Pago</a>
         </div>
-        <div class="col-md-4 col-lg-2 mb-4 mb-md-0">
-          <h5 class="footer-heading">Recursos</h5>
-          <a href="#" class="footer-link">Manual de usuario</a>
-          <a href="#" class="footer-link">Documentación</a>
-          <a href="#" class="footer-link">FAQs</a>
-        </div>
+
         <div class="col-md-4 col-lg-4">
-          <h5 class="footer-heading">Contacto</h5>
-          <p class="mb-3"><i class="fas fa-map-marker-alt me-2"></i> Av. 12 de Octubre, Quito, Ecuador</p>
-          <p class="mb-3"><i class="fas fa-phone me-2"></i> +593 99 123 4567</p>
-          <p class="mb-3"><i class="fas fa-envelope me-2"></i> info@nominapro.com</p>
+          <h5 class="footer-heading">Integrantes</h5>
+          <p class="mb-3"><i class=" fa-map-marker-alt me-2"></i> Angely Segovia</p>
+          <p class="mb-3"><i class=" fa-phone me-2"></i> Kristel Burgos</p>
+          <p class="mb-3"><i class=" fa-envelope me-2"></i> Daniela Arriaga</p>
+          <p class="mb-3"><i class=" fa-envelope me-2"></i> Laddy Rocha</p>
         </div>
       </div>
       <div class="text-center copyright">
-        <p>© {% now 'Y' %} NóminaPro. Todos los derechos reservados.</p>
+        <p>© {% now 'Y' %} Nómina. Todos los derechos reservados.</p>
       </div>
     </div>
   </footer>

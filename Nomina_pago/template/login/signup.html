@@ -1,48 +1,99 @@
-
 {% extends "home.html" %}
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/signin.css' %}">
-<main class="container">
-    <div class="row">
-        <div class="col-md-4 offset-md-4">
-            <form action="/signup/" method="POST" class="card card-body">
-                <h1>Crear Cuenta</h1>
-               
-                {% if error %}
-                    <div class="alert alert-danger">{{ error }}</div>
-                {% endif %}
-               
-                {% csrf_token %}
-               
-                <div class="mb-3">
-                    <label for="username">Nombre de usuario</label>
-                    <input type="text" id="username" name="username" class="form-control"
-                           placeholder="Ingresa tu usuario" required>
-                    <small class="form-text text-muted">Requerido. 150 caracteres o menos.</small>
+<!-- Incluye Font Awesome para los íconos -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+    .auth-container {
+        background: 
+            url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%2300c9a7" fill-opacity="0.15" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>') no-repeat top/100% 45%,
+            url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%2300c9a7" fill-opacity="0.15" d="M0,256L48,261.3C96,267,192,277,288,266.7C384,256,480,224,576,218.7C672,213,768,235,864,250.7C960,267,1056,277,1152,261.3C1248,245,1344,203,1392,181.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom/100% 45%;
+        min-height: 100vh;
+    }
+    .auth-card {
+        border-top: 5px solid #00c9a7;
+        border-radius: 12px;
+        max-width: 420px;
+        margin: 100px auto;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    .auth-title {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        color: #0d2b45;
+        letter-spacing: 0.5px;
+        font-size: 1.8rem;
+    }
+    .btn-mint {
+        background-color: #00c9a7;
+        border: none;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+        padding: 12px 20px;
+    }
+    .btn-mint:hover {
+        background-color: #00b896;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 201, 167, 0.3);
+    }
+    .form-control {
+        border: 1px solid #e0e0e0;
+        height: 48px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 0.95rem;
+    }
+</style>
+
+<div class="auth-container d-flex align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card card bg-white">
+                    <div class="card-body p-4 p-md-5">
+                        <h2 class="auth-title text-center mb-4">CREAR CUENTA</h2>
+                        
+                        {% if error %}
+                            <div class="alert alert-danger">{{ error }}</div>
+                        {% endif %}
+                        
+                        <form action="/signup/" method="POST">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-medium">Nombre de usuario</label>
+                                <input type="text" name="username" class="form-control" placeholder="Ingresa tu usuario" required>
+                                <small class="text-muted mt-1 d-block">Requerido, 150 caracteres o menos.</small>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-medium">Contraseña</label>
+                                <input type="password" name="password1" class="form-control" placeholder="Ingresa tu contraseña" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-medium">Confirma tu contraseña</label>
+                                <input type="password" name="password2" class="form-control" placeholder="Confirma tu contraseña" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-mint text-white w-100 py-2 mb-4">
+                                <i class="fas fa-user-plus me-2"></i> CREAR CUENTA
+                            </button>
+                            
+                            <div class="text-center pt-2">
+                                <p class="mb-0">¿Ya tienes cuenta? <a href="/signin/" class="text-decoration-none fw-medium" style="color: #0d2b45;">Inicia sesión aquí</a></p>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-               
-                <div class="mb-3">
-                    <label for="password1">Contraseña</label>
-                    <input type="password" id="password1" name="password1" class="form-control"
-                           placeholder="Ingresa tu contraseña" required>
-                </div>
-               
-                <div class="mb-3">
-                    <label for="password2">Confirma tu contraseña</label>
-                    <input type="password" id="password2" name="password2" class="form-control"
-                           placeholder="Confirma tu contraseña" required>
-                </div>
-               
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-user-plus me-2"></i> Crear Cuenta
-                </button>
-               
-                <div class="form-text mt-3">
-                    ¿Ya tienes una cuenta? <a href="/signin/">Inicia sesión aquí</a>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-</main>
+</div>
 {% endblock %}

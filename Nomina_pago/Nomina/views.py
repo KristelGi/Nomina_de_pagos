@@ -15,7 +15,10 @@ from django.http.request import HttpRequest
 from django.shortcuts import render
 
 def home(request):
-    return render(request, 'home.html')
+    data = {
+        'title' : 'Sistema de Nominas',
+    }
+    return render(request, 'home.html', data)
 
 @login_required
 def crear_empleado(request):
@@ -36,7 +39,7 @@ def crear_empleado(request):
            contexto['form'] = form
            return render(request, 'empleado/create.html',contexto) 
 
-    
+@login_required
 def listar_empleados(request):
     query = request.GET.get('q', '')
     depto_id = request.GET.get('departamento', '')
@@ -134,7 +137,7 @@ def crear_cargo(request):
         else:
             contexto['form'] = form
             return render(request, 'cargo/create.html', contexto)
-
+@login_required
 def listar_cargos(request):
     cargos = Cargo.objects.all()
 
@@ -180,7 +183,7 @@ def eliminar_cargo(request, id):
     return render(request, 'cargo/delete.html', {'cargo': cargo, 'title': 'Eliminar Cargo'})
 
 ############################## Departamentos ###########################
-
+@login_required
 def listar_departamentos(request):
     departamentos = Departamento.objects.all()
 
@@ -243,7 +246,7 @@ def eliminar_departamento(request, id):
     })
 
 ###############################Tipo de Contrato############################
-
+@login_required
 def listar_tipos_contrato(request):
     contratos = TipoContrato.objects.all()
     return render(request, 'contrato/list.html', {
@@ -296,7 +299,7 @@ def eliminar_tipo_contrato(request, id):
 
 
 ############################# Rol #######################################
-
+@login_required
 def listar_roles(request):
     query = request.GET.get('q', '')
     mes = request.GET.get('mes', '')
@@ -431,7 +434,6 @@ def signin(request):
 def signout(request):
     logout(request)  
     return redirect('home')  
-
 
 # FAVICO DEL PROYECTO
 def home_view(request:HttpRequest) -> HttpResponse:

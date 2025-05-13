@@ -12,4 +12,3 @@ admin.site.register(Rol)
 admin.site.register(Cargo)
 admin.site.register(Departamento)
 admin.site.register(TipoContrato)
-
