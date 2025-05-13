@@ -1,4 +1,3 @@
-
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Empleado, Rol, Departamento, Cargo, TipoContrato
 from .forms import EmpleadoForm, RolForm, CargoForm, DepartamentoForm, TipoContratoForm
@@ -12,7 +11,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse
 from django.http.request import HttpRequest
-from django.shortcuts import render
 
 def home(request):
     data = {

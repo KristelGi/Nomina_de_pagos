@@ -33,7 +33,7 @@ class Empleado(models.Model):
     sexo = models.CharField(max_length=1, choices=SEXO_CHOICES)
     sueldo = models.DecimalField(max_digits=10, decimal_places=2)
     cargo = models.ForeignKey(Cargo, on_delete=models.CASCADE)
-    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE)  
+    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE)
     tipo_contrato = models.ForeignKey(TipoContrato, on_delete=models.CASCADE)
 
     def __str__(self):

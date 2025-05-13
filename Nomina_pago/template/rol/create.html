@@ -1,7 +1,7 @@
 {% extends 'home.html' %} 
 {% block extra_css %}
 <style>
-    /* Estilos personalizados para la página de roles */
+/* Estilos personalizados para la página de roles */
 /* Estilos optimizados para la página de roles */
 .page-header {
   position: relative;
@@ -179,43 +179,72 @@ select {
           <form method="post">
             {% csrf_token %}
 
-            <!-- Renderizar cada campo con estilo personalizado -->
             {% for field in form %}
-            <div class="mb-4">
-              <label for="{{ field.id_for_label }}" class="form-label">
-                {% if field.name == 'nombre' %}
-                <i class="fas fa-user-tag text-primary me-2"></i>
-                {% elif field.name == 'descripcion' %}
-                <i class="fas fa-file-alt text-primary me-2"></i>
-                {% else %}
-                <i class="fas fa-clipboard-list text-primary me-2"></i>
-                {% endif %} {{ field.label }}
-              </label>
-              {{ field }} {% if field.help_text %}
-              <div class="form-text text-muted">{{ field.help_text }}</div>
-              {% elif field.name == 'nombre' %}
-              <div class="form-text text-muted">
-                Nombre único que identifica el rol en el sistema
+              <div class="mb-4">
+                <label for="{{ field.id_for_label }}" class="form-label">
+                  {% if field.name == 'empleado' %}
+                    <i class="fas fa-user text-primary me-2"></i>
+                  {% elif field.name == 'aniomes' %}
+                    <i class="fas fa-calendar-alt text-primary me-2"></i>
+                  {% elif field.name == 'horas_extra' %}
+                    <i class="fas fa-clock text-primary me-2"></i>
+                  {% elif field.name == 'bono' %}
+                    <i class="fas fa-gift text-primary me-2"></i>
+                  {% else %}
+                    <i class="fas fa-clipboard-list text-primary me-2"></i>
+                  {% endif %}
+                  {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                  <div class="text-danger mt-1">{{ field.errors }}</div>
+                {% endif %}
               </div>
-              {% elif field.name == 'descripcion' %}
-              <div class="form-text text-muted">
-                Describe las responsabilidades y funciones de este rol
-              </div>
-              {% endif %} {% if field.errors %}
-              <div class="text-danger mt-1">{{ field.errors }}</div>
-              {% endif %}
-            </div>
             {% endfor %}
 
-            <!-- Campos ocultos que pudieran existir en el formulario -->
-            {% for hidden in form.hidden_fields %} {{ hidden }} {% endfor %}
+            <!-- Sueldo mostrado automáticamente (readonly) -->
+            <div class="mb-4">
+              <label for="sueldo" class="form-label">
+                <i class="fas fa-money-bill-wave text-primary me-2"></i> Sueldo
+              </label>
+              <input type="text" id="sueldo" name="sueldo" class="form-control" readonly>
+            </div>
 
-            <!-- Botones de acción -->
+            <!-- Cálculos automáticos -->
+            <div class="mb-4">
+              <label for="tot_ing" class="form-label">
+                <i class="fas fa-wallet text-primary me-2"></i> Total Ingresos
+              </label>
+              <input type="text" id="tot_ing" class="form-control" readonly>
+            </div>
+
+            <div class="mb-4">
+              <label for="iess" class="form-label">
+                <i class="fas fa-percentage text-primary me-2"></i> Aporte IESS (9.45%)
+              </label>
+              <input type="text" id="iess" class="form-control" readonly>
+            </div>
+
+            <div class="mb-4">
+              <label for="tot_des" class="form-label">
+                <i class="fas fa-minus-circle text-primary me-2"></i> Total Descuentos
+              </label>
+              <input type="text" id="tot_des" class="form-control" readonly>
+            </div>
+
+            <div class="mb-4">
+              <label for="neto" class="form-label">
+                <i class="fas fa-hand-holding-usd text-primary me-2"></i> Neto a Recibir
+              </label>
+              <input type="text" id="neto" class="form-control" readonly>
+            </div>
+
+            {% for hidden in form.hidden_fields %}
+              {{ hidden }}
+            {% endfor %}
+
             <div class="d-flex justify-content-end gap-2 mt-4">
-              <a
-                href="{% url 'Nomina:listar_roles' %}"
-                class="btn btn-outline-secondary"
-              >
+              <a href="{% url 'Nomina:listar_roles' %}" class="btn btn-outline-secondary">
                 <i class="fas fa-times me-2"></i>Cancelar
               </a>
               <button type="submit" class="btn btn-primary px-4">
@@ -228,4 +257,78 @@ select {
     </div>
   </div>
 </div>
+
+<!-- SCRIPT: Actualiza sueldo y cálculos automáticamente -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // Selección más robusta usando name
+  const empleadoSelect = document.querySelector('select[name="empleado"]');
+  const bonoInput = document.querySelector('input[name="bono"]');
+  const horasExtraInput = document.querySelector('input[name="horas_extra"]');
+
+  const sueldoInput = document.getElementById('sueldo');
+  const totIngInput = document.getElementById('tot_ing');
+  const iessInput = document.getElementById('iess');
+  const totDesInput = document.getElementById('tot_des');
+  const netoInput = document.getElementById('neto');
+
+  // Dataset de sueldos desde Django
+  const sueldos = {
+    {% for empleado in form.fields.empleado.queryset %}
+      "{{ empleado.id }}": {{ empleado.sueldo|default:'0.00' }},
+    {% endfor %}
+  };
+
+  const CalculadoraRol = {
+    sueldo: 0,
+    bono: 0,
+    horasExtra: 0,
+    setSueldo(valor) {
+      this.sueldo = parseFloat(valor) || 0;
+      return this;
+    },
+    setBono(valor) {
+      this.bono = parseFloat(valor) || 0;
+      return this;
+    },
+    setHorasExtra(valor) {
+      this.horasExtra = parseFloat(valor) || 0;
+      return this;
+    },
+    calcular() {
+      const iess = +(this.sueldo * 0.0945).toFixed(2);
+      const tot_ing = +(this.sueldo + this.bono + this.horasExtra).toFixed(2);
+      const neto = +(tot_ing - iess).toFixed(2);
+      return { iess, tot_ing, tot_des: iess, neto };
+    }
+  };
+
+  function actualizarCampos() {
+    const empleadoId = empleadoSelect?.value;
+    const sueldo = sueldos[empleadoId] || 0;
+    const bono = bonoInput?.value;
+    const horasExtra = horasExtraInput?.value;
+
+    const resultado = CalculadoraRol
+      .setSueldo(sueldo)
+      .setBono(bono)
+      .setHorasExtra(horasExtra)
+      .calcular();
+
+    sueldoInput.value = sueldo.toFixed(2);
+    totIngInput.value = resultado.tot_ing.toFixed(2);
+    iessInput.value = resultado.iess.toFixed(2);
+    totDesInput.value = resultado.tot_des.toFixed(2);
+    netoInput.value = resultado.neto.toFixed(2);
+  }
+
+  [empleadoSelect, bonoInput, horasExtraInput].forEach(el => {
+    el?.addEventListener('input', actualizarCampos);
+    el?.addEventListener('change', actualizarCampos);
+  });
+
+  actualizarCampos();  // Mostrar cálculos al cargar
+});
+</script>
+
 {% endblock %}

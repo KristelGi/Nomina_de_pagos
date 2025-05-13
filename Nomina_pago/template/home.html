@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,16 +14,23 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
- <!--  FAVICO --->
- <link rel="shortcut icon" type="image/png" href="{% static 'img/NominaPro.png' %}">
+  <!--  FAVICO --->
+  <link rel="shortcut icon" type="image/png" href="{% static 'img/Nomina.png' %}">
   <style>
-      :root {
-      --primary-color: #0A2342;     /* Color principal - azul oscuro */
-      --secondary-color: #2CA58D;   /* Color secundario - verde agua */
-      --accent-color: #84BC9C;      /* Color acento - verde claro */
-      --light-color: #f8f9fa;       /* Color claro para fondos */
-      --text-color: #333;           /* Color de texto principal */
-      --text-light: #ffffff;        /* Color de texto claro */
+    :root {
+      --primary-color: #031926;      /* Color principal - azul oscuro */
+      --secondary-color: #2CA58D;    /* Color secundario - verde agua */
+      --accent-color: #84BC9C;       /* Color acento - verde claro */
+      --light-color: #F5F5F5;        /* Gris muy claro para fondos */
+      --light-accent: #E9ECEF;       /* Gris más oscuro para contrastes en fondos */
+      --text-color: #333;            /* Color de texto principal */
+      --text-light: #ffffff;         /* Color de texto claro */
+      --text-muted: #6C757D;         /* Color de texto secundario */
+      --border-radius: 10px;         /* Radio de borde general */
+      --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+      --transition: all 0.3s ease;
     }
     
     body {
@@ -32,31 +38,52 @@
       color: var(--text-color);
       overflow-x: hidden;
       background-color: var(--light-color);
+      line-height: 1.6;
     }
     
+    /* Navbar styles */
     .navbar {
       background-color: var(--primary-color) !important;
-      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
-      padding: 15px 0;
+      box-shadow: var(--shadow-md);
+      padding: 12px 0;
     }
     
     .navbar-brand {
       font-weight: 700;
       color: var(--text-light) !important;
       font-size: 1.5rem;
+      letter-spacing: 0.5px;
     }
     
     .navbar-brand span {
       color: var(--accent-color) !important;
+      font-weight: 800;
     }
     
     .nav-link {
       font-weight: 500;
       color: var(--text-light) !important;
       margin: 0 10px;
-      transition: all 0.3s ease;
+      transition: var(--transition);
+      padding: 8px 0;
+      position: relative;
     }
     
+    .nav-link:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: var(--accent-color);
+      bottom: 0;
+      left: 0;
+      transition: var(--transition);
+    }
+    
+    .nav-link:hover:after, .nav-link.active:after {
+      width: 100%;
+    }
+
     .nav-link:hover, .nav-link.active {
       color: var(--accent-color) !important;
     }
@@ -65,71 +92,195 @@
       border-color: var(--text-light);
       outline: none;
       color: var(--text-light) !important;
+      padding: 0;
     }
     
     .navbar-toggler-icon {
       background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
     }
+
+    /* Button styles */
+    .btn {
+      border-radius: 50px;
+      font-weight: 600;
+      padding: 10px 24px;
+      transition: var(--transition);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.85rem;
+      box-shadow: var(--shadow-sm);
+    }
     
+    .btn-sm {
+      padding: 6px 16px;
+      font-size: 0.75rem;
+    }
+
     .btn-primary {
       background-color: var(--secondary-color);
       border-color: var(--secondary-color);
-      padding: 10px 25px;
-      border-radius: 50px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      color: white;
     }
     
     .btn-primary:hover {
       background-color: var(--accent-color);
       border-color: var(--accent-color);
-      color: var(--primary-color);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
     
     .btn-outline-primary {
       border-color: var(--secondary-color);
       color: var(--secondary-color);
-      padding: 10px 25px;
-      border-radius: 50px;
-      font-weight: 500;
-      transition: all 0.3s ease;
     }
     
-    .btn-outline-primary:hover {
+    .btn-outline-primary:hover, .btn-outline-primary:focus {
       background-color: var(--secondary-color);
       color: white;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
     
+    /* Hero section */
     .hero {
-      background: linear-gradient(135deg, rgba(10, 35, 66, 0.05) 0%, rgba(44, 165, 141, 0.1) 100%);
-      padding: 100px 0;
+      background-color: var(--primary-color);
+      background-image: linear-gradient(135deg, var(--primary-color) 0%, #253B56 100%);
+      padding: 120px 0 100px;
       position: relative;
       overflow: hidden;
+      color: var(--text-light);
     }
-    
-    .hero h1 {
-      font-weight: 700;
-      font-size: 3rem;
-      margin-bottom: 20px;
-      color: var(--primary-color);
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background-color: rgba(44, 239, 196, 0.08);
+      bottom: -80px;
+      left: 10%;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background-color: rgba(63, 201, 166, 0.1);
+      top: -100px;
+      right: -100px;
     }
     
     .hero p {
       font-size: 1.2rem;
       margin-bottom: 30px;
-      color: var(--text-color);
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 600px;
     }
     
     .hero-img {
       max-width: 100%;
-      animation: float 3s ease-in-out infinite;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-lg);
+      animation: float 6s ease-in-out infinite;
     }
     
     @keyframes float {
       0% { transform: translateY(0px); }
       50% { transform: translateY(-15px); }
       100% { transform: translateY(0px); }
+    }
+
+    /* Stats section */
+    .stats-section {
+      margin-top: -50px;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .stats-card {
+      background-color: white;
+      padding: 30px 20px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+      height: 100%;
+      transition: var(--transition);
+      border-bottom: 4px solid var(--accent-color);
+    }
+    
+    .stats-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-bottom-color: var(--secondary-color);
+    }
+    
+    .stats-icon {
+      width: 60px;
+      height: 60px;
+      background-color: rgba(132, 188, 156, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      color: var(--secondary-color);
+      font-size: 1.4rem;
+      transition: var(--transition);
+    }
+    
+    .stats-card:hover .stats-icon {
+      background-color: var(--secondary-color);
+      color: white;
+      transform: rotate(360deg);
+    }
+    
+    .stats-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+    
+    .stats-text {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    /* Features section */
+    .section-title {
+      position: relative;
+      margin-bottom: 60px;
+      z-index: 1;
+    }
+    
+    .section-title h2 {
+      position: relative;
+      display: inline-block;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+    
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      height: 8px;
+      width: 50%;
+      background-color: var(--accent-color);
+      opacity: 0.3;
+      bottom: 0;
+      left: 25%;
+      border-radius: 30px;
+    }
+    
+    .section-title p {
+      max-width: 700px;
+      margin: 0 auto;
+      color: var(--text-muted);
     }
     
     .feature-box {
@@ -166,41 +317,6 @@
       color: var(--primary-color);
     }
     
-    .stats-card {
-      background-color: white;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      text-align: center;
-      height: 100%;
-      border-bottom: 4px solid var(--accent-color);
-    }
-    
-    .stats-icon {
-      width: 50px;
-      height: 50px;
-      background-color: rgba(132, 188, 156, 0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 15px;
-      color: var(--accent-color);
-      font-size: 1.2rem;
-    }
-    
-    .stats-number {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: 5px;
-    }
-    
-    .stats-text {
-      color: var(--text-color);
-      font-size: 0.9rem;
-    }
-    
     section.bg-light {
       background-color: #f9f9f9 !important;
     }
@@ -213,6 +329,39 @@
       color: var(--secondary-color) !important;
     }
     
+    /* Dropdown menu styles */
+    .dropdown-menu {
+      background-color: white;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      padding: 10px 0;
+      margin-top: 10px;
+    }
+    
+    .dropdown-item {
+      color: var(--text-color);
+      padding: 8px 20px;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    
+    .dropdown-item:hover, .dropdown-item:focus {
+      background-color: rgba(44, 165, 141, 0.1);
+      color: var(--secondary-color);
+      transform: translateX(5px);
+    }
+    
+    .dropdown-toggle::after {
+      margin-left: 0.5em;
+      vertical-align: middle;
+    }
+    
+    .navbar .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+    
+    /* Footer styles */
     footer {
       background-color: var(--primary-color);
       color: rgba(255, 255, 255, 0.7);
@@ -286,7 +435,7 @@
       transform: translateY(-5px);
     }
     
-    /* Responsive */
+    /* Responsive styles */
     @media (max-width: 991.98px) {
       .hero h1 {
         font-size: 2.5rem;
@@ -314,44 +463,11 @@
         margin-bottom: 30px;
       }
     }
-    /* Estilos para los dropdown menus del navbar */
-.dropdown-menu {
-  background-color: white;
-  border: none;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  padding: 10px 0;
-  margin-top: 10px;
-}
-
-.dropdown-item {
-  color: var(--text-color);
-  padding: 8px 20px;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-}
-
-.dropdown-item:hover, .dropdown-item:focus {
-  background-color: rgba(44, 165, 141, 0.1);
-  color: var(--secondary-color);
-  transform: translateX(5px);
-}
-
-.dropdown-toggle::after {
-  margin-left: 0.5em;
-  vertical-align: middle;
-}
-
-.navbar .dropdown:hover .dropdown-menu {
-  display: block;
-}
-
   </style>
   {% block extra_css %}{% endblock %}
 </head>
 <body>
   <!-- Navbar -->
-  <!-- Barra de navegación principal -->
   <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
       <a class="navbar-brand" href="{% url 'home' %}">Sistema de <span>Nómina</span></a>
@@ -394,12 +510,15 @@
             </li>
           {% endif %}
         </ul>
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
           {% if user.is_authenticated %}
             <div class="me-3 d-flex align-items-center text-light">
-              <span>Hola, {{ user.username }}</span>
+              <i class="fas fa-user-circle me-2"></i>
+              <span>{{ user.username }}</span>
             </div>
-            <a class="btn btn-outline-primary" href="{% url 'Nomina:logout' %}">Cerrar Sesión</a>
+            <a class="btn btn-outline-primary" href="{% url 'Nomina:logout' %}">
+              <i class="fas fa-sign-out-alt me-1"></i> Salir
+            </a>
           {% else %}
             <a class="btn btn-outline-primary me-2" href="{% url 'Nomina:signin' %}">Iniciar Sesión</a>
             <a class="btn btn-primary" href="{% url 'Nomina:signup' %}">Registrarse</a>
@@ -410,68 +529,78 @@
   </nav>
 
   {% block content %}
+  <!-- Hero Section -->
   <section class="hero">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-6">
-          <h1>Sistema de Nómina de Pagos</h1>
-          <p class="text-muted">Gestiona eficientemente la información de empleados, cargos, departamentos y roles de pago con nuestra plataforma integral.</p>
-          <div class="d-flex flex-wrap">
-            <a href="{% url 'Nomina:listar_empleados' %}" class="btn btn-primary me-3 mb-2">Gestionar Empleados</a>
-            <a href="{% url 'Nomina:listar_roles' %}" class="btn btn-outline-primary mb-2">Ver Roles de Pago</a>
+          <h1>Gestión Inteligente de Nómina</h1>
+          <p>Optimiza el proceso de pagos a empleados, controla la información de personal y simplifica la gestión de recursos humanos con nuestra plataforma integral.</p>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'Nomina:listar_empleados' %}" class="btn btn-primary">
+              <i class="fas fa-users me-2"></i>Gestionar Empleados
+            </a>
+            <a href="{% url 'Nomina:listar_roles' %}" class="btn btn-outline-primary">
+              <i class="fas fa-file-invoice-dollar me-2"></i>Ver Roles de Pago
+            </a>
           </div>
-        </div>
-        <div class="col-lg-6">
-          <img src="{% static 'img/nomina.jpg' %}" alt="Sistema de Nómina" class="hero-img img-fluid rounded shadow">
         </div>
       </div>
     </div>
   </section>
 
   <!-- Stats Section -->
-  <section class="py-5 bg-light">
+  <section class="stats-section py-4">
     <div class="container">
       <div class="row">
-        <div class="col-md-3 col-6 mb-4 mb-md-0">
+        <div class="col-md-3 col-6 mb-4">
           <div class="stats-card">
             <div class="stats-icon">
               <i class="fas fa-users"></i>
             </div>
-            <h3 class="stats-number">{{ total_empleados }}</h3>
-            <p class="stats-text">Empleados registrados</p>
+            <a href="{% url 'Nomina:listar_empleados' %}">
+              <h3 class="stats-number counter">{{ total_empleados }}</h3>
+              <p class="stats-text">Empleados</p>
+            </a>
           </div>
         </div>
-        <div class="col-md-3 col-6 mb-4 mb-md-0">
+        <div class="col-md-3 col-6 mb-4">
           <div class="stats-card">
             <div class="stats-icon">
               <i class="fas fa-briefcase"></i>
             </div>
-            <h3 class="stats-number">{{ total_cargos }}</h3>
-            <p class="stats-text">Cargos disponibles</p>
+            <a href="{% url 'Nomina:listar_cargos' %}">
+              <h3 class="stats-number counter">{{ total_cargos }}</h3>
+              <p class="stats-text">Cargos</p>
+            </a>
           </div>
         </div>
-        <div class="col-md-3 col-6">
+        <div class="col-md-3 col-6 mb-4">
           <div class="stats-card">
             <div class="stats-icon">
               <i class="fas fa-building"></i>
             </div>
-            <h3 class="stats-number">{{ total_departamentos }}</h3>
-            <p class="stats-text">Departamentos</p>
+            <a href="{% url 'Nomina:listar_departamentos' %}">
+              <h3 class="stats-number counter">{{ total_departamentos }}</h3>
+              <p class="stats-text">Departamentos</p>
+            </a>
           </div>
         </div>
-        <div class="col-md-3 col-6">
+        <div class="col-md-3 col-6 mb-4">
           <div class="stats-card">
             <div class="stats-icon">
               <i class="fas fa-file-invoice-dollar"></i>
             </div>
-            <h3 class="stats-number">{{ total_roles }}</h3>
-            <p class="stats-text">Roles procesados</p>
+            <a href="{% url 'Nomina:listar_roles' %}">
+              <h3 class="stats-number counter">{{ total_roles }}</h3>
+              <p class="stats-text">Roles de Pago</p>
+            </a>
           </div>
         </div>
       </div>
     </div>
   </section>
-
+  
   <!-- Features Section -->
   <section class="py-5">
     <div class="container">
@@ -550,49 +679,6 @@
     </div>
   </section>
 
-  <!-- App Interface Section -->
-  <section class="py-5 bg-light">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
-          <h2 class="fw-bold mb-4">Interfaz intuitiva y fácil de usar</h2>
-          <p class="mb-4">Nuestro sistema está diseñado para maximizar la productividad. Con una interfaz clara y amigable, podrás gestionar todos los aspectos de la nómina sin complicaciones.</p>
-          <div class="d-flex mb-3">
-            <div class="me-3 text-primary">
-              <i class="fas fa-check-circle fa-2x"></i>
-            </div>
-            <div>
-              <h5>Formularios optimizados</h5>
-              <p class="text-muted">Diseñados para capturar información de manera eficiente minimizando errores.</p>
-            </div>
-          </div>
-          <div class="d-flex mb-3">
-            <div class="me-3 text-primary">
-              <i class="fas fa-check-circle fa-2x"></i>
-            </div>
-            <div>
-              <h5>Navegación simplificada</h5>
-              <p class="text-muted">Accede a todas las funciones con pocos clics para ahorrar tiempo valioso.</p>
-            </div>
-          </div>
-          <div class="d-flex">
-            <div class="me-3 text-primary">
-              <i class="fas fa-check-circle fa-2x"></i>
-            </div>
-            <div>
-              <h5>Diseño responsivo</h5>
-              <p class="text-muted">Compatible con todos los dispositivos para que puedas trabajar desde cualquier lugar.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6 order-lg-1">
-          <img src="/api/placeholder/600/450" alt="App Interface" class="img-fluid rounded shadow">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  
   <!-- Sección CTA para el registro y login -->
   <section class="py-4 bg-light">
     <div class="container">
@@ -620,6 +706,7 @@
       </div>
     </div>
   </section>
+  
   <!-- Footer -->
   <footer>
     <div class="container">
