@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,6 +13,8 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!--  FAVICO --->
+  <link rel="shortcut icon" type="image/png" href="{% static 'img/NominaPro.png' %}">
   <style>
     :root {
       --primary-color: #0A2342;     /* Color principal - azul oscuro */
@@ -367,7 +371,7 @@
           </div>
         </div>
         <div class="col-lg-6">
-          <img src="/api/placeholder/600/400" alt="Sistema de Nómina" class="hero-img img-fluid rounded shadow">
+          <img src="{% static 'img/nomina.jpg' %}" alt="Sistema de Nómina" class="hero-img img-fluid rounded shadow">
         </div>
       </div>
     </div>

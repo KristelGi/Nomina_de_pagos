@@ -43,5 +43,8 @@ class RolForm(forms.ModelForm):
         model = Rol
         exclude = ['sueldo', 'iess', 'tot_ing', 'tot_des', 'neto']
         widgets = {
-            'aniomes': forms.DateInput(attrs={'type': 'date'})
+            'aniomes': forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'placeholder': 'YYYY-MM-DD'}),
+            'empleado': forms.Select(attrs={'class': 'form-select'}),
+            'horas_extras': forms.NumberInput(attrs={'type': 'number', 'class': 'form-control', 'min': 0, 'step': '0.01'}),
+            'bono': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': '0.01'}),
         }

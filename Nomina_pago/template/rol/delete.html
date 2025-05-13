@@ -1,9 +1,25 @@
-<h2>{{ title }}</h2>
+{% extends "home.html" %}
+{% block title %}Eliminar Rol{% endblock %}
 
-<p>¿Estás seguro que deseas eliminar el rol de <strong>{{ rol.empleado.nombre }}</strong> para el mes {{ rol.aniomes }}?</p>
+{% block content %}
+<div class="container">
+    <div class="mt-4 border border-2 shadow rounded bg-light p-4">
+        <div class="py-2 border-bottom border-primary text-center">
+            <h2 class="fw-bold text-danger">¿Estás seguro que deseas eliminar el rol de <strong>{{ rol.empleado.nombre }}</strong> para el mes {{ rol.aniomes }}?</h2>
+        </div>
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Sí, eliminar</button>
-    <a href="{% url 'Nomina:listar_roles' %}">Cancelar</a>
-</form>
+        {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+            <strong>Error:</strong> {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+
+        <form method="post" class="text-center mt-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger mx-2">Sí, eliminar</button>
+            <a href="{% url 'Nomina:listar_roles' %}" class="btn btn-outline-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

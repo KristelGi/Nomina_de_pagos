@@ -1,7 +1,123 @@
-<h2>{{ title }}</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar</button>
-    <a href="{% url 'Nomina:listar_tipos_contrato' %}">Cancelar</a>
-</form>
+{% extends "home.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="mt-4 border border-2 shadow rounded bg-light p-4">
+        <div class="py-2 border-bottom border-primary text-center">
+            <h2 class="fw-bold text-primary">{{ title }}</h2>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+            <strong>Error:</strong> {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="feature-box p-4">
+                        {{ form.as_p }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary mx-2">
+                    <i class="fas fa-save me-2"></i>Guardar
+                </button>
+                <a href="{% url 'Nomina:listar_tipos_contrato' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-times me-2"></i>Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Estilo para todos los párrafos que contienen campos del formulario */
+    .feature-box p {
+        margin-bottom: 20px;
+    }
+    
+    /* Estilo para las etiquetas del formulario */
+    .feature-box label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--primary-color);
+    }
+    
+    /* Estilo para los inputs y textareas */
+    .feature-box input[type="text"],
+    .feature-box input[type="email"],
+    .feature-box input[type="number"],
+    .feature-box input[type="date"],
+    .feature-box textarea,
+    .feature-box select {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1.5px solid var(--secondary-color);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+    
+    /* Estilo para textareas */
+    .feature-box textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+    
+    /* Efectos de hover y focus */
+    .feature-box input:hover,
+    .feature-box textarea:hover,
+    .feature-box select:hover {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 10px rgba(44, 165, 141, 0.2);
+    }
+    
+    .feature-box input:focus,
+    .feature-box textarea:focus,
+    .feature-box select:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 15px rgba(44, 165, 141, 0.3);
+        outline: none;
+    }
+    
+    /* Contenedor principal */
+    .feature-box {
+        border-top: 4px solid var(--secondary-color);
+        background-color: white;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .feature-box:hover {
+        transform: translateY(-5px);
+    }
+    
+    /* Estilos para mensajes de ayuda */
+    .feature-box .helptext {
+        display: block;
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 5px;
+        font-style: italic;
+    }
+    
+    /* Estilos para mensajes de error */
+    .feature-box .errorlist {
+        list-style: none;
+        color: #dc3545;
+        padding-left: 0;
+        margin-top: 5px;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}

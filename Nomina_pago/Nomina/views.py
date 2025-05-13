@@ -10,6 +10,9 @@ from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
+from django.http.response import HttpResponse
+from django.http.request import HttpRequest
+from django.shortcuts import render
 
 def home(request):
     return render(request, 'home.html')
@@ -428,3 +431,8 @@ def signin(request):
 def signout(request):
     logout(request)  
     return redirect('home')  
+
+
+# FAVICO DEL PROYECTO
+def home_view(request:HttpRequest) -> HttpResponse:
+    return render(request, 'home.html')

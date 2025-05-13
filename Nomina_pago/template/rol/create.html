@@ -1,8 +1,231 @@
-<h2>{{ title }}</h2>
+{% extends 'home.html' %} 
+{% block extra_css %}
+<style>
+    /* Estilos personalizados para la página de roles */
+/* Estilos optimizados para la página de roles */
+.page-header {
+  position: relative;
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar Rol</button>
-    <a href="{% url 'Nomina:listar_roles' %}">Cancelar</a>
-</form>
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 3px;
+  background-color: var(--secondary-color);
+}
+
+/* Estilo para la tarjeta del formulario */
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.card:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-header {
+  border-bottom: none;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+}
+
+.card-body {
+  padding: 1.75rem !important;
+}
+
+/* Estilos para TODOS los inputs del formulario */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="email"],
+input[type="password"],
+select,
+textarea,
+.form-control {
+  border-radius: 8px;
+  padding: 12px 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.form-control:focus {
+  box-shadow: 0 0 0 0.25rem rgba(44, 165, 141, 0.25);
+  border-color: var(--secondary-color);
+  outline: none;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Estilos para las etiquetas */
+label,
+.form-label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--primary-color);
+  display: block;
+}
+
+/* Estilos para los íconos dentro del formulario */
+.fas, 
+[class^="fa-"], 
+[class*=" fa-"] {
+  transition: all 0.3s ease;
+}
+
+/* Botones */
+.btn {
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, var(--secondary-color), var(--accent-color));
+  border: none;
+  box-shadow: 0 4px 12px rgba(44, 165, 141, 0.2);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(44, 165, 141, 0.3);
+}
+
+.btn-outline-secondary {
+  border: 1px solid #d4d4d4;
+  color: #555;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f8f9fa;
+  border-color: #c8c8c8;
+}
+
+/* Para asegurar que los iconos en inputs y botones se ven bien */
+.input-group-text {
+  background-color: #f8f9fa;
+  border-color: rgba(0, 0, 0, 0.1);
+  color: var(--secondary-color);
+}
+
+/* Estilo para selects estilizados como en tu imagen */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  padding-right: 2.5rem !important;
+}
+
+/* Animación de entrada para el formulario */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Media queries para responsividad */
+@media (max-width: 767.98px) {
+  .card-body {
+    padding: 1.25rem !important;
+  }
+  
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+}
+</style>
+{% endblock %} 
+{% block content %}
+<div class="container py-4">
+  <header class="page-header mb-4">
+    <h1 class="display-5 fw-bold text-primary">
+      <i class="fas fa-user-tag me-2"></i>{{ title }}
+    </h1>
+    <p class="lead text-muted">Registrar nuevo rol en el sistema</p>
+  </header>
+
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white py-3">
+          <h5 class="mb-0">
+            <i class="fas fa-id-badge me-2"></i>Información del Rol
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          <form method="post">
+            {% csrf_token %}
+
+            <!-- Renderizar cada campo con estilo personalizado -->
+            {% for field in form %}
+            <div class="mb-4">
+              <label for="{{ field.id_for_label }}" class="form-label">
+                {% if field.name == 'nombre' %}
+                <i class="fas fa-user-tag text-primary me-2"></i>
+                {% elif field.name == 'descripcion' %}
+                <i class="fas fa-file-alt text-primary me-2"></i>
+                {% else %}
+                <i class="fas fa-clipboard-list text-primary me-2"></i>
+                {% endif %} {{ field.label }}
+              </label>
+              {{ field }} {% if field.help_text %}
+              <div class="form-text text-muted">{{ field.help_text }}</div>
+              {% elif field.name == 'nombre' %}
+              <div class="form-text text-muted">
+                Nombre único que identifica el rol en el sistema
+              </div>
+              {% elif field.name == 'descripcion' %}
+              <div class="form-text text-muted">
+                Describe las responsabilidades y funciones de este rol
+              </div>
+              {% endif %} {% if field.errors %}
+              <div class="text-danger mt-1">{{ field.errors }}</div>
+              {% endif %}
+            </div>
+            {% endfor %}
+
+            <!-- Campos ocultos que pudieran existir en el formulario -->
+            {% for hidden in form.hidden_fields %} {{ hidden }} {% endfor %}
+
+            <!-- Botones de acción -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <a
+                href="{% url 'Nomina:listar_roles' %}"
+                class="btn btn-outline-secondary"
+              >
+                <i class="fas fa-times me-2"></i>Cancelar
+              </a>
+              <button type="submit" class="btn btn-primary px-4">
+                <i class="fas fa-save me-2"></i>Guardar Rol
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

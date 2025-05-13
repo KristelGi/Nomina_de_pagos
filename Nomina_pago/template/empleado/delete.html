@@ -1,14 +1,25 @@
+{% extends "home.html" %}
+{% block title %}Eliminar Empleado{% endblock %}
 
-<h2>{{ title }}</h2>
+{% block content %}
+<div class="container">
+    <div class="mt-4 border border-2 shadow rounded bg-light p-4">
+        <div class="py-2 border-bottom border-primary text-center">
+            <h2 class="fw-bold text-danger">¿Seguro que deseas eliminar a {{ empleado.nombre }}?</h2>
+        </div>
 
-<p>¿Seguro que deseas eliminar a <strong>{{ empleado.nombre }}</strong>?</p>
+        {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+            <strong>Error:</strong> {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
 
-{% if error %}
-    <p style="color: red;">{{ error }}</p>
-{% endif %}
-
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Sí, eliminar</button>
-    <a href="{% url 'Nomina:listar_empleados' %}">Cancelar</a>
-</form>
+        <form method="post" class="text-center mt-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger mx-2">Sí, eliminar</button>
+            <a href="{% url 'Nomina:listar_empleados' %}" class="btn btn-outline-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
