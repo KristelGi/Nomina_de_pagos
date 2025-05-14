@@ -64,6 +64,31 @@
   .fw-bold {
     font-weight: 700;
   }
+    /* Estilos para la paginación */
+  .pagination {
+    gap: 5px;
+  }
+  
+  .page-link {
+    border-radius: 6px;
+    color: var(--primary-color);
+    border-color: #dee2e6;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .page-item.active .page-link {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+  }
+  
+  .page-link:hover {
+    background-color: #e9ecef;
+    color: var(--secondary-color);
+  }
+  
+  .page-item.disabled .page-link {
+    color: #6c757d;
+  }
 </style>
 {% endblock %}
 {% block content %}
@@ -169,6 +194,54 @@
       </div>
     </div>
   </div>
+  
+  {% if roles.has_other_pages %}
+        <nav aria-label="Page navigation" class="mt-4">
+          <ul class="pagination justify-content-center">
+            {% if roles.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ roles.previous_page_number }}">
+                <i class="fas fa-chevron-left me-1"></i>Anterior
+              </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                <i class="fas fa-chevron-left me-1"></i>Anterior
+              </a>
+            </li>
+            {% endif %}
+
+            {% for i in roles.paginator.page_range %}
+              {% if roles.number == i %}
+              <li class="page-item active">
+                <a class="page-link" href="#">{{ i }}</a>
+              </li>
+              {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+              </li>
+              {% endif %}
+            {% endfor %}
+              
+            {% if roles.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ roles.next_page_number }}">
+                Siguiente<i class="fas fa-chevron-right ms-1"></i>
+              </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                Siguiente<i class="fas fa-chevron-right ms-1"></i>
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+  </div>
+</section>
 </section>
 
 
