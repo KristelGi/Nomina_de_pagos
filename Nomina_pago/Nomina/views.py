@@ -322,8 +322,18 @@ def listar_roles(request):
         except ValueError:
             print("Sueldo mínimo inválido: no se aplicó filtro")
 
+        paginator = Paginator(roles, 5)
+    page = request.GET.get('page', 1)
+
+    try:
+        roles_paginados = paginator.page(page)
+    except PageNotAnInteger:
+        roles_paginados = paginator.page(1)
+    except:
+        roles_paginados = paginator.page(paginator.num_pages)
+
     contexto = {
-        'roles': roles,
+        'roles': roles_paginados,
         'title': 'Listado de Roles',
         'q': query,
         'mes': mes,
